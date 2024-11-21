@@ -1,36 +1,70 @@
-import React from 'react'
+import React,{ useState } from 'react'
+import axiosInstance from '@/utils/axiosInstance';
+import Navbar from '@/components/mycomponents/Navbar/Navbar';
 
-const AddOrderCard = ( {toggleModal}) => {
+const AddOrderCard = () => {
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [category, setCategory] = useState("");
+    const [location, setLocation] = useState("");
+    const [payment, setPayment] = useState(0);
+    const [urgency, setUrgency] = useState(false);
+    const [duration, setDuration] = useState(0);
+
+
+
+
+
+
+    const handleCreateOrder = async (e) => {
+        e.preventDefault();
+
+        const newPost = { title, content, category, location, payment, urgency, duration };
+
+        try {
+            const token = localStorage.getItem("token"); // Retrieve token
+            const response = await axiosInstance.post("/add-order", newPost, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            console.log("Post created:", response.data);
+
+            if (onPostCreated) {
+                onPostCreated(response.data.post); // Notify parent component about the new post
+            }
+        } catch (error) {
+            console.error("Error creating order:", error);
+        }
+    };
 
   return (
     <>
+
+    <Navbar />
     {/* <!-- Modal Background --> */}
-<div id="jobPostModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+<div class="flex items-center justify-center">
     {/* <!-- Modal Container --> */}
     <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
-        {/* <!-- Close Button --> */}
-        <button onClick={toggleModal} class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
+        {/* <!-- Close Button --> */}    
         
         {/* <!-- Modal Title --> */}
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Post a Job</h2>
         
         {/* <!-- Job Form --> */}
-        <form>
+        <form onSubmit={handleCreateOrder}>
             {/* <!-- Job Title --> */}
             <label class="block mb-2 text-gray-600">Job Title</label>
-            <input type="text" placeholder="e.g., Math Tutoring for Calculus II" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4"/>
+            <input value={title} type='text' onChange={(e) => setTitle(e.target.value)}
+                required placeholder="e.g., Math Tutoring for Calculus II" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4" />
 
             {/* <!-- Job Description --> */}
             <label class="block mb-2 text-gray-600">Job Description</label>
-            <textarea placeholder="Describe the task you need help with" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4"></textarea>
+            <textarea placeholder="Describe the task you need help with" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4" value={content} onChange={(e) => setContent(e.target.value)}
+                required></textarea>
             
             {/* <!-- Category --> */}
             <label class="block mb-2 text-gray-600">Category</label>
-            <select class="text-black w-full border border-gray-300 rounded-md p-2 mb-4">
+            <select class="text-black w-full border border-gray-300 rounded-md p-2 mb-4" value={category} onChange={(e) => setCategory(e.target.value)}
+                required>
                 <option>Tutoring</option>
                 <option>Food Delivery</option>
                 <option>Tech Help</option>
@@ -40,28 +74,33 @@ const AddOrderCard = ( {toggleModal}) => {
 
             {/* <!-- Location --> */}
             <label class="block mb-2 text-gray-600">Location</label>
-            <input type="text" placeholder="e.g., Library, Study Room B" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4"/>
+            <input type="text" placeholder="e.g., Library, Study Room B" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4" value={location} onChange={(e) => setLocation(e.target.value)}
+                required/>
             
             {/* <!-- Date & Time --> */}
-            <label class="block mb-2 text-gray-600">Date & Time</label>
-            <input type="datetime-local" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4"/>
+            {/* <label class="block mb-2 text-gray-600">Date & Time</label>
+            <input type="datetime-local" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4" value={date} onChange={(e) => setDate(e.target.value)}
+                required/> */}
             
             {/* <!-- Duration --> */}
             <label class="block mb-2 text-gray-600">Duration (in hours)</label>
-            <input type="number" placeholder="e.g., 1" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4"/>
+            <input type="number" placeholder="e.g., 1" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4" value={duration} onChange={(e) => setDuration(e.target.value)}
+                required/>
             
             {/* <!-- Payment --> */}
             <label class="block mb-2 text-gray-600">Payment</label>
-            <input type="number" placeholder="e.g., 15" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4"/>
+            <input type="number" placeholder="e.g., 15" class="text-black w-full border border-gray-300 rounded-md p-2 mb-4" value={payment} onChange={(e) => setPayment(e.target.value)}
+                required/>
             
             {/* <!-- Urgency Checkbox --> */}
             <label class="inline-flex items-center mt-4">
-                <input type="checkbox" class="form-checkbox text-red-500" />
+                <input type="checkbox" class="form-checkbox text-red-500" value={urgency} onChange={(e) => setUrgency(e.target.value)}
+                required/>
                 <span class="ml-2 text-gray-700">Mark as Urgent</span>
             </label>
             
             {/* <!-- Submit Button --> */}
-            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md mt-6">
+            <button onClick={handleCreateOrder} class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md mt-6">
                 Post Job
             </button>
         </form>

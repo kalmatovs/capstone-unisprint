@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import PasswordInput from '../../components/Input/PasswordInput';
+import PasswordInput from '../../components/mycomponents/Input/PasswordInput';
 import { Link, useNavigate } from "react-router-dom";
-import Navbar_Login_CreateAcc from '../../components/Navbar/Navbar_Login_CreateAcc';
+import Navbar_Login_CreateAcc from '../../components/mycomponents/Navbar/Navbar_Login_CreateAcc';
 import axiosInstance from '../../utils/axiosInstance';
 
 
@@ -12,6 +12,9 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [major, setMajor] = useState("");
+  const [year, setYear] = useState("");
+  const [hometown, setHometown] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate()
 
@@ -25,6 +28,9 @@ const SignUp = () => {
         fullName: name,
         email:email,
         password: password,
+        major: major,
+        hometown: hometown,
+        year: year
       });
   
   
@@ -43,9 +49,10 @@ const SignUp = () => {
 
   return (
     <>
-    <Navbar_Login_CreateAcc />
+    {/* <Navbar_Login_CreateAcc /> */}
 
-    <div class="min-h-screen flex items-center justify-center w-full dark:bg-gray-950">
+    <div class="min-h-screen flex flex-col items-center justify-center w-full dark:bg-gray-950">
+    <img src="https://files.oaiusercontent.com/file-xJ70nFRNMV9nQracst3YXzIh?se=2024-11-21T03%3A37%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D6ad644ac-8f77-4482-9721-293a7d92433e.webp&sig=yHcCRAhka1DxYkE7hy8vSoyk9X8r%2B5CRYOEImfiT1BM%3D" className='w-1/6 rounded-full mb-10' alt="" />
       <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md">
         <h1 class="text-2xl font-bold text-center mb-4 dark:text-gray-200">Create an Account</h1>
         <form>
@@ -62,6 +69,35 @@ const SignUp = () => {
             
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            />          </div>
+            <div class="mb-4">
+          <label for="major" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Major</label>
+            <input  id="major" class="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black" placeholder="Major" required
+            
+            value={major}
+            onChange={(e) => setMajor(e.target.value)}
+            />          </div>
+            <div class="mb-4">
+          <label for="year" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Year</label>
+          <select class="text-black w-full border border-gray-300 rounded-md p-2 mb-4" value={year}
+            onChange={(e) => setYear(e.target.value)}>
+                <option>Freshman</option>
+                <option>Sophomore</option>
+                <option>Junior</option>
+                <option>Senior</option>
+                <option>Grad Student</option>
+            </select>
+            {/* <input  id="year" class="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black" placeholder="Name" required
+            
+            value={year}
+            onChange={(e) => setYear(e.target.value)}/>  */}
+                     </div>
+            <div class="mb-4">
+          <label for="hometown" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Hometown <span>(Optional)</span> </label>
+            <input  id="hometown" class="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black" placeholder="Hometown" required
+            
+            value={hometown}
+            onChange={(e) => setHometown(e.target.value)}
             />          </div>
 
           < PasswordInput

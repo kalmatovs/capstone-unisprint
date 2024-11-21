@@ -9,8 +9,7 @@ const Order = require("./models/order.model");
 
 mongoose.connect(config.connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected"))
-  .catch(err => console.error("MongoDB connection error:", err));
-
+  .catch(err => console.error("MongoDB connection erro:", err));
 
 mongoose.connect(config.connectionString);
 
@@ -34,7 +33,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/create-account", async (req, res) => {
-    const {fullName, email, password} = req.body;
+    const {fullName, email, password, major, hometown, year} = req.body;
 
     if(!fullName) {
         return res
@@ -54,6 +53,18 @@ app.post("/create-account", async (req, res) => {
             .json({error: true, message: "Password is required"})
     }
 
+    if(!major) {
+        return res
+            .status(400)
+            .json({error: true, message: "Major is required"})
+    }
+
+    if(!year) {
+        return res
+            .status(400)
+            .json({error: true, message: "Year is required"})
+    }
+
     const isUser = await User.findOne({email:email});
     if(isUser) {
         return res.json({
@@ -66,6 +77,9 @@ app.post("/create-account", async (req, res) => {
         fullName,
         email,
         password,
+        major,
+        hometown,
+        year
     });
 
     await user.save();
@@ -128,13 +142,12 @@ app.get("/get-user", authenticateToken, async (req, res) => {
 
     return res.json({
         user: isUser,
-        message: "",
+        message: "user found",
     });
 });
 
 app.post("/add-order", authenticateToken, async(req, res) => {
     const {title, content, category, location, payment, urgency, duration} = req.body;
-    const {user} = req.user;
 
     if (!title) {
         return res.status(400).json({message: "Title is required."});
@@ -156,7 +169,7 @@ app.post("/add-order", authenticateToken, async(req, res) => {
             title,
             content,
             category,
-            userId: user._id,
+            userId: req.user.userId,
             payment,
             location,
             urgency: urgency || false,
@@ -223,7 +236,7 @@ app.put("/edit-order/:orderId", authenticateToken, async (req, res) => {
     }
 });
 
-app.get("/get-all-orders", authenticateToken, async (req, res) => {
+app.get("/get-user-all-orders", authenticateToken, async (req, res) => {
     const {user} = req.user;
     try {
         const orders = await Order.find({userId: user._id}); // Retrieve all orders
@@ -265,6 +278,37 @@ app.delete("/delete-order/:orderId", authenticateToken, async (req, res) => {
         });
     } catch (error) {
         console.error("Error in /delete-order route:", error);
+        return res.status(500).json({
+            error: true,
+            message: "Internal Server error",
+        });
+    }
+});
+
+app.get("/profile", authenticateToken, async (req, res) => {
+    try {
+        const {user}  = req.user;
+        const isUser = await User.findOne({_id: user._id}); // Exclude password for security
+        if (!isUser) {
+            return res.status(404).json({ error: true, message: "User not found" });
+        }
+        res.json({ error: false, user, message: "User profile retrieved successfully" });
+    } catch (error) {
+        console.error("Error in /profile:", error);
+        res.status(500).json({ error: true, message: "Internal server error" });
+    }
+});
+
+app.get("/get-all-orders", async (req, res) => {
+    try {
+        const orders = await Order.find().sort({createdAt: -1}); // Retrieve all orders
+        return res.json({
+            error: false,
+            orders,
+            message: "All orders retrieved successfully",
+        });
+    } catch (error) {
+        console.error("Error in /get-all-orders route:", error);
         return res.status(500).json({
             error: true,
             message: "Internal Server error",

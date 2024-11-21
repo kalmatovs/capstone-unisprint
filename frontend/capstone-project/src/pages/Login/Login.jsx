@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Navbar_Login_CreateAcc from '../../components/Navbar/Navbar_Login_CreateAcc';
+import Navbar_Login_CreateAcc from '../../components/mycomponents/Navbar/Navbar_Login_CreateAcc';
 import { Link, useNavigate } from "react-router-dom";
-import PasswordInput from "../../components/Input/PasswordInput";
+import PasswordInput from "../../components/mycomponents/Input/PasswordInput";
 import { validateEmail } from '../../utils/helper';
 import axiosInstance from '../../utils/axiosInstance';
 // import {}} from '../../utils/constants';
@@ -48,11 +48,12 @@ const Login = () => {
 
   return (
     <>
-    <Navbar_Login_CreateAcc />
+    {/* <Navbar_Login_CreateAcc /> */}
 
  
 
-        <div class="min-h-screen flex items-center justify-center w-full dark:bg-gray-950">
+        <div class="min-h-screen flex flex-col items-center justify-center w-full dark:bg-gray-950">
+          <img src="https://files.oaiusercontent.com/file-xJ70nFRNMV9nQracst3YXzIh?se=2024-11-21T03%3A37%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D6ad644ac-8f77-4482-9721-293a7d92433e.webp&sig=yHcCRAhka1DxYkE7hy8vSoyk9X8r%2B5CRYOEImfiT1BM%3D" className='w-1/6 rounded-full mb-10' alt="" />
       <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md">
         <h1 class="text-2xl font-bold text-center mb-4 dark:text-gray-200">Welcome Back!</h1>
         <form>
