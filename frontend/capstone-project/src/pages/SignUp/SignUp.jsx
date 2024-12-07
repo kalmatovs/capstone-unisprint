@@ -55,7 +55,7 @@ const SignUp = () => {
     <img src="https://files.oaiusercontent.com/file-xJ70nFRNMV9nQracst3YXzIh?se=2024-11-21T03%3A37%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D6ad644ac-8f77-4482-9721-293a7d92433e.webp&sig=yHcCRAhka1DxYkE7hy8vSoyk9X8r%2B5CRYOEImfiT1BM%3D" className='w-1/6 rounded-full mb-10' alt="" />
       <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md">
         <h1 class="text-2xl font-bold text-center mb-4 dark:text-gray-200">Create an Account</h1>
-        <form>
+        <form onSubmit={handleSignup}>
         <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Name</label>
             <input  id="name" class="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black" placeholder="Name" required

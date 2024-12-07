@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 const Home = () => {
   const [orders, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [openAddEditJob, setOpenAddEditJob] = useState({
     isShown: false,
@@ -20,15 +21,15 @@ const Home = () => {
 
   const fetchPosts = async () => {
     try {
-        setLoading(true);
-        const response = await axiosInstance.get("/get-all-orders");
-        setPosts(response.data.orders);
+      setLoading(true);
+      const response = await axiosInstance.get("/get-all-orders");
+      setOrders(response.data.orders);
     } catch (error) {
-        console.error("Error fetching posts:", error);
+      console.error("Error fetching posts:", error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   const toggleModal = () => {
     setOpenAddEditJob(prevState => ({
@@ -39,39 +40,53 @@ const Home = () => {
 
   useEffect(() => {
     fetchPosts();
-}, []);
+  }, []);
 
-if (loading) {
-  return <p>Loading posts...</p>;
-}
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+  };
+
+  const filteredOrders = orders.filter(order =>
+    order.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <>
+        <Navbar onSearch={handleSearch} />
+        <p className="text-center mt-8">Loading posts...</p>
+      </>
+      );
+  }
 
   return (
     <>
-      <Navbar />
+      <Navbar onSearch={handleSearch} />
 
       <div className='flex flex-row justify-center space-x-5'>
-      {orders && orders.length === 0 ? (
-                <p>No posts available</p>
-            ) : (
-                orders.map((order) => (
-                    <OrderCard
-                        // key={order._id}
-                        title={order.title}
-                        content={order.content}
-                        category={order.category}
-                        location={order.location}
-                        price={order.payment}
-                        urgency={order.urgency}
-                        date={order.datePosted}
-                    />
-                ))
-            )} 
-            </div>  
-            <div className='flex justify-center mt-10'>
-      <button
-        className=" bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md"
-      ><Link to={"/create-post"}>Post a Job</Link>
-      </button></div>
+        {filteredOrders.length === 0 ? (
+          <p>No posts available</p>
+        ) : (
+          filteredOrders.map((order) => (
+            <OrderCard
+              // key={order._id}
+              title={order.title}
+              content={order.content}
+              category={order.category}
+              location={order.location}
+              price={order.payment}
+              urgency={order.urgency}
+              date={order.datePosted}
+            />
+          ))
+        )}
+      </div>
+      <div className='flex justify-center mt-10'>
+        <button
+          className=" bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md"
+        ><Link to={"/create-post"}>Post a Job</Link>
+        </button></div>
 
       <Modal
         isOpen={openAddEditJob.isShown}
