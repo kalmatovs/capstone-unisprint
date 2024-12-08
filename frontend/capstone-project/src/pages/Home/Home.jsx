@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 
 const Home = () => {
-  const [orders, setPosts] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -62,7 +62,7 @@ const Home = () => {
 
   return (
     <>
-      <Navbar onSearch={handleSearch} />
+      <Navbar onSearch={handleSearch} value={searchTerm} />
 
       <div className='flex flex-row justify-center space-x-5'>
         {filteredOrders.length === 0 ? (
@@ -70,7 +70,7 @@ const Home = () => {
         ) : (
           filteredOrders.map((order) => (
             <OrderCard
-              // key={order._id}
+              key={order._id}
               title={order.title}
               content={order.content}
               category={order.category}

@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({path: "./.env"});
 
 
 const config = require("./config.json");
@@ -11,7 +11,7 @@ mongoose.connect(config.connectionString, { useNewUrlParser: true, useUnifiedTop
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.error("MongoDB connection erro:", err));
 
-mongoose.connect(config.connectionString);
+//mongoose.connect(config.connectionString);
 
 const express = require("express");
 const cors = require("cors");
@@ -84,7 +84,7 @@ app.post("/create-account", async (req, res) => {
 
     await user.save();
 
-    const accessToken = jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {
+    const accessToken = jwt.sign({userId: user._id}, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "36000min",
     });
 
@@ -113,7 +113,7 @@ app.post("/login", async (req, res) => {
         return res.status(400).json({message:"User not found"});
     }
 
-    if (userInfo.email == email && userInfo.password == password) {
+    if (userInfo.email === email && userInfo.password === password) {
         const user = {user: userInfo};
         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn:"36000m",
@@ -190,6 +190,30 @@ app.post("/add-order", authenticateToken, async(req, res) => {
 
 
 });
+
+app.get("/order-history", authenticateToken, async (req, res) => {
+    try {
+        // Retrieve orders based on the user ID (from the token)
+        const orders = await Order.find({ userId: req.user.userId });
+
+        // If no orders exist
+        if (orders.length === 0) {
+            return res.status(404).json({ message: "No orders found for this user." });
+        }
+
+        return res.json({
+            error: false,
+            orders,
+            message: "Orders retrieved successfully"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            error: true,
+            message: "Internal Server Error"
+        });
+    }
+});
+
 
 app.put("/edit-order/:orderId", authenticateToken, async (req, res) => {
     const orderId  = req.params.orderId;
@@ -301,7 +325,7 @@ app.get("/profile", authenticateToken, async (req, res) => {
 
 app.get("/get-all-orders", async (req, res) => {
     try {
-        const orders = await Order.find().sort({createdAt: -1}); // Retrieve all orders
+        const orders = await Order.find().sort({createdAt: -1}); 
         return res.json({
             error: false,
             orders,
@@ -320,3 +344,4 @@ app.get("/get-all-orders", async (req, res) => {
 app.listen(8000);
 
 module.exports = app;
+
