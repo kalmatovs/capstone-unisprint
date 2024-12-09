@@ -102,15 +102,9 @@ import { ChevronDown, Menu, X, CheckCircle, Users, Zap, Shield, ArrowRight } fro
 
 
 const Home = () => {
-  const [orders, setPosts] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [funFact, setFunFact] = useState("");
-
-  const funFacts = [
-    "Did you know? Students who study in groups perform 20% better on tests!",
-    "Tip: A 25-minute focus followed by a 5-minute break boosts productivity.",
-    "Fun Fact: College students drink 22 million cups of coffee every day!"
-  ];
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [openAddEditJob, setOpenAddEditJob] = useState({
     isShown: false,
@@ -120,13 +114,13 @@ const Home = () => {
 
   const fetchPosts = async () => {
     try {
-        setLoading(true);
-        const response = await axiosInstance.get("/get-all-orders");
-        setPosts(response.data.orders);
+      setLoading(true);
+      const response = await axiosInstance.get("/get-all-orders");
+      setOrders(response.data.orders);
     } catch (error) {
-        console.error("Error fetching posts:", error);
+      console.error("Error fetching posts:", error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -144,22 +138,37 @@ const Home = () => {
 
   useEffect(() => {
     fetchPosts();
-    randomFunFact();
   }, []);
 
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+  };
+
+  const filteredOrders = orders.filter(order =>
+    order.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (loading) {
-    return <p>Loading posts...</p>;
+    return (
+      <>
+        <Navbar onSearch={handleSearch} />
+        <p className="text-center mt-8">Loading posts...</p>
+      </>
+      );
   }
 
   return (
     <>
-      <Navbar />
-      <div className='flex flex-row justify-center space-x-5 mt-5'>
-        {orders && orders.length === 0 ? (
+      <Navbar onSearch={handleSearch} value={searchTerm} />
+
+      <div className='flex flex-row justify-center space-x-5'>
+        {filteredOrders.length === 0 ? (
           <p>No posts available</p>
         ) : (
-          orders.map((order) => (
+          filteredOrders.map((order) => (
             <OrderCard
+              key={order._id}
               title={order.title}
               content={order.content}
               category={order.category}
@@ -171,18 +180,12 @@ const Home = () => {
           ))
         )}
       </div>
-      
       <div className='flex justify-center mt-10'>
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md"
-        >
-          <Link to={"/create-post"}>Post a Job</Link>
-        </button>
-      </div>
-      <div className="mt-10 text-center bg-gray-100 p-4 rounded-md shadow-md">
-        <h2 className="font-bold text-lg mb-2">Fun Fact of the Day</h2>
-        <p className="text-gray-700">{funFact}</p>
-      </div>
+          className=" bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md"
+        ><Link to={"/create-post"}>Post a Job</Link>
+        </button></div>
+
       <Modal
         isOpen={openAddEditJob.isShown}
         onRequestClose={toggleModal}
