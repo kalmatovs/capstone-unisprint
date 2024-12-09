@@ -357,6 +357,47 @@ app.get("/get-all-orders", async (req, res) => {
         });
     }
 });
+app.post("/accept-job", authenticateToken, async (req, res) => {
+    const { orderId } = req.body;
+    const { user } = req.user;
+  
+    try {
+      // Find the order
+      const order = await Order.findById(orderId);
+  
+      if (!order) {
+        return res.status(404).json({
+          error: true,
+          message: "Order not found",
+        });
+      }
+  
+      // Check if the order is already accepted
+      if (order.acceptedBy) {
+        return res.status(400).json({
+          error: true,
+          message: "This job has already been accepted",
+        });
+      }
+  
+      // Update the order with the user who accepted it
+      order.acceptedBy = user._id;
+      order.acceptedAt = new Date();
+      await order.save();
+  
+      return res.json({
+        error: false,
+        success: true,
+        message: "Job accepted successfully",
+      });
+    } catch (error) {
+      console.error("Error in /accept-job route:", error);
+      return res.status(500).json({
+        error: true,
+        message: "Internal Server error",
+      });
+    }
+  });
 
 
 app.listen(8000);

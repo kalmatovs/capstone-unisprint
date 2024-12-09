@@ -4,12 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 
 
 
-const Navbar = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+const Navbar = ({onSearch, searchTerm}) => {
+  //const [searchTerm, setSearchTerm] = useState('');
   const handleSearch = (e) => {
     const value = e.target.value;
-    setSearchTerm(value);
-    onSearch(value);
+    //setSearchTerm(value);
+    //onSearch(value);
+    onSearch(e.target.value);
   };
   return (
 

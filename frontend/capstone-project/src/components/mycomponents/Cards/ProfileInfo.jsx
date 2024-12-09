@@ -14,6 +14,7 @@ import axios from 'axios';
 const ProfileInfo = () => {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [acceptedJobs, setAcceptedJobs] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
@@ -24,11 +25,11 @@ const ProfileInfo = () => {
       setPosts(prevPosts => [location.state.newPost, ...prevPosts]);
     }
   }, [location.state]);
-  const token = localStorage.getItem("token");
+  
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        //const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
         if (!token) {
           throw new Error("No authentication token found");
@@ -53,6 +54,7 @@ const ProfileInfo = () => {
 
         setUser(profileResponse.data.user);
         setPosts(postsResponse.data.orders);
+        
 
 
         setIsLoading(false);
