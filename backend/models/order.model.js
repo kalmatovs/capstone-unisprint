@@ -10,7 +10,9 @@ const orderSchema = new Schema({
     urgency: { type: Boolean, default: false }, // Indicates if the job is urgent
     duration: { type: Number, default: 0 }, // Duration in hours
     datePosted: { type: Date, default: Date.now }, // Automatically sets to the current date
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true }
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    acceptedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null},
+    acceptedAt: {type: Date, default: null}
 });
 
 module.exports = mongoose.model("Order", orderSchema);
