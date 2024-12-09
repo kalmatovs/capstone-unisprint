@@ -11,8 +11,6 @@ mongoose.connect(config.connectionString, { useNewUrlParser: true, useUnifiedTop
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.error("MongoDB connection erro:", err));
 
-mongoose.connect(config.connectionString);
-
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -147,7 +145,20 @@ app.get("/get-user", authenticateToken, async (req, res) => {
 });
 
 app.post("/add-order", authenticateToken, async(req, res) => {
+    console.log("Authenticated user:", req.user._id);
+    console.log("JWT Secret:", process.env.ACCESS_TOKEN_SECRET);
+    const jwt = require("jsonwebtoken")
+
+    // Replace with your actual token   
+
+    // const decoded = jwt.decode(token, { complete: true });
+    // console.log("Decoded token:", decoded);
+    // console.log("Decoded token payload:", decoded.payload);
+
+
+
     const {title, content, category, location, payment, urgency, duration} = req.body;
+    // const {user}  = req.user;
 
     if (!title) {
         return res.status(400).json({message: "Title is required."});
@@ -163,6 +174,10 @@ app.post("/add-order", authenticateToken, async(req, res) => {
     if (!payment) {
         return res.status(400).json({message: "Payment is required."});
     }
+    if (!req.user || !req.user._id) {
+        return res.status(401).json({ error: true, message: "Unauthorized" })
+    }
+    
 
     try {
         const order = new Order({
@@ -170,22 +185,23 @@ app.post("/add-order", authenticateToken, async(req, res) => {
             content,
             category,
             userId: req.user.userId,
-            payment,
-            location,
+            payment: payment|| 0,
             urgency: urgency || false,
-            duration: duration || 0,
-        });
-        await order.save();
+            duration: duration || 0, 
+            location,
+        })
+        await order.save()
         return res.json({
             error: false,
             order,
             message: "Order added successfully"
         });
-    } catch (error) {
+    } catch (error ) {
+        console.error("Error in /add-order route:", error.message);
         return res.status(500).json({
             error:true,
             message: "Internal Server error"
-        });
+        })
     }
 
 

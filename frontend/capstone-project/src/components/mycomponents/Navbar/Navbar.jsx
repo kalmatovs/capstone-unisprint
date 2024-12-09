@@ -10,7 +10,7 @@ const Navbar = () => {
       <nav class=" border-gray-200 dark:bg-gray-900 dark:border-gray-700">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
     <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-        <img src="https://files.oaiusercontent.com/file-xJ70nFRNMV9nQracst3YXzIh?se=2024-11-21T03%3A37%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D6ad644ac-8f77-4482-9721-293a7d92433e.webp&sig=yHcCRAhka1DxYkE7hy8vSoyk9X8r%2B5CRYOEImfiT1BM%3D" class="w-20 rounded-full" alt="Logo" />
+        <img src="../../src/assets/unisprint_logo.webp" class="w-20 rounded-full" alt="Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">UniSprint</span>
     </a>
     <button data-collapse-toggle="navbar-dropdown" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-dropdown" aria-expanded="false">

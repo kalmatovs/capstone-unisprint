@@ -19,10 +19,11 @@ const AddOrderCard = () => {
     const handleCreateOrder = async (e) => {
         e.preventDefault();
 
-        const newPost = { title, content, category, location, payment, urgency, duration };
+        const newPost = { title, content, category, location, payment: parseInt(payment, 10), urgency, duration:parseInt(duration, 10) };
 
         try {
-            const token = localStorage.getItem("token"); // Retrieve token
+            const token = localStorage.getItem("token");
+            console.log(token) // Retrieve token
             const response = await axiosInstance.post("/add-order", newPost, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -100,7 +101,7 @@ const AddOrderCard = () => {
             </label>
             
             {/* <!-- Submit Button --> */}
-            <button onClick={handleCreateOrder} class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md mt-6">
+            <button type='submit' class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md mt-6">
                 Post Job
             </button>
         </form>

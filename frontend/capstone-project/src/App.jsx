@@ -5,10 +5,12 @@ import Login from './pages/Login/Login'
 import SignUp from './pages/SignUp/SignUp'
 import ProfileInfo from './components/mycomponents/Cards/ProfileInfo'
 import AddOrderCard from './pages/Home/AddOrderCard'
+import LandingPage from './pages/Landing/LandingPage'
 
 const routes = (
   <Router>
     <Routes>
+    <Route path="" exact element={<LandingPage />}/>
     <Route path="/dashboard" exact element={<Home />}/>
     <Route path="/login" exact element={<Login />}/>
     <Route path="/signup" exact element={<SignUp />}/>
