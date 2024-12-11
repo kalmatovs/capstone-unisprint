@@ -147,8 +147,6 @@ app.get("/get-user", authenticateToken, async (req, res) => {
 });
 
 app.post("/add-order", authenticateToken, async(req, res) => {
-    console.log("Authenticated user:", req.user._id);
-    console.log("JWT Secret:", process.env.ACCESS_TOKEN_SECRET);
     const jwt = require("jsonwebtoken")
 
     // Replace with your actual token   
@@ -179,6 +177,7 @@ app.post("/add-order", authenticateToken, async(req, res) => {
     if (!req.user || !req.user._id) {
         return res.status(401).json({ error: true, message: "Unauthorized" })
     }
+    
     
 
     try {
@@ -288,7 +287,7 @@ app.get("/get-user-all-orders", authenticateToken, async (req, res) => {
             message: "All orders retrieved successfully",
         });
     } catch (error) {
-        console.error("Error in /get-all-orders route:", error);
+        console.error("Error in /get-user-all-orders route:", error);
         return res.status(500).json({
             error: true,
             message: "Internal Server error",
@@ -340,7 +339,42 @@ app.get("/profile", authenticateToken, async (req, res) => {
         res.status(500).json({ error: true, message: "Internal server error" });
     }
 });
-
+app.get("/get-user-created-posts", authenticateToken, async (req, res) => {
+    const { user } = req.user;
+    try {
+      const createdPosts = await Order.find({ userId: user._id }).sort({ datePosted: -1 });
+      return res.json({
+        error: false,
+        createdPosts,
+        message: "User created posts retrieved successfully",
+      });
+    } catch (error) {
+      console.error("Error in /get-user-created-posts route:", error);
+      return res.status(500).json({
+        error: true,
+        message: "Internal Server error",
+      });
+    }
+  });
+  
+  app.get("/get-user-accepted-jobs", authenticateToken, async (req, res) => {
+    const { user } = req.user;
+    try {
+      
+      const acceptedJobs = await Order.find({ acceptedBy: user._id }).sort({ datePosted: -1 });
+      return res.json({
+        error: false,
+        acceptedJobs,
+        message: "User accepted jobs retrieved successfully",
+      });
+    } catch (error) {
+      console.error("Error in /get-user-accepted-jobs route:", error);
+      return res.status(500).json({
+        error: true,
+        message: "Internal Server error",
+      });
+    }
+  });
 app.get("/get-all-orders", async (req, res) => {
     try {
         const orders = await Order.find().sort({createdAt: -1}); 
@@ -362,8 +396,12 @@ app.post("/accept-job", authenticateToken, async (req, res) => {
     const { user } = req.user;
   
     try {
-      // Find the order
-      const order = await Order.findById(orderId);
+      
+      const order = await Order.findByIdAndUpdate(
+        orderId,
+        {acceptedBy: user._id},
+        {new: true}
+      );
   
       if (!order) {
         return res.status(404).json({
