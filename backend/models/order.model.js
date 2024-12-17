@@ -16,6 +16,6 @@ const orderSchema = new Schema({
     applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Track applicants
     status: { type: String, default: "Open" }, // Open, Accepted, or Rejected
     // userName: {type: String, default: userId.fullName}
-});
+})
 
 module.exports = mongoose.model("Order", orderSchema);
