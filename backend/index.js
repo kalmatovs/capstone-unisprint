@@ -130,10 +130,14 @@ app.get("/get-user", authenticateToken, async (req, res) => {
 });
 
 app.post("/add-order", authenticateToken, async(req, res) => {
+<<<<<<< HEAD
     console.log("Authenticated user:", req.user);
     console.log("JWT Secret:", process.env.ACCESS_TOKEN_SECRET);
     const jwt = require("jsonwebtoken");
     const userId = req.user.userId;
+=======
+    const jwt = require("jsonwebtoken")
+>>>>>>> f562d3d73f147b6df45785f2e2d340f21013b271
 
     // Replace with your actual token   
 
@@ -163,6 +167,7 @@ app.post("/add-order", authenticateToken, async(req, res) => {
     if (!userId) {
         return res.status(401).json({ error: true, message: "Unauthorized" })
     }
+    
     
 
     try {
@@ -272,7 +277,7 @@ app.get("/get-user-all-orders", authenticateToken, async (req, res) => {
             message: "All orders retrieved successfully",
         });
     } catch (error) {
-        console.error("Error in /get-all-orders route:", error);
+        console.error("Error in /get-user-all-orders route:", error);
         return res.status(500).json({
             error: true,
             message: "Internal Server error",
@@ -356,8 +361,12 @@ app.post("/accept-job", authenticateToken, async (req, res) => {
     const { user } = req.user;
   
     try {
-      // Find the order
-      const order = await Order.findById(orderId);
+      
+      const order = await Order.findByIdAndUpdate(
+        orderId,
+        {acceptedBy: user._id},
+        {new: true}
+      );
   
       if (!order) {
         return res.status(404).json({
