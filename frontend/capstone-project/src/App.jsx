@@ -6,6 +6,7 @@ import SignUp from './pages/SignUp/SignUp'
 import ProfileInfo from './components/mycomponents/Cards/ProfileInfo'
 import AddOrderCard from './pages/Home/AddOrderCard'
 import LandingPage from './pages/Landing/LandingPage'
+import Notifications from './pages/Activity/Notifications'
 
 const routes = (
   <Router>
@@ -16,6 +17,7 @@ const routes = (
     <Route path="/signup" exact element={<SignUp />}/>
     <Route path="/profile" exact element={<ProfileInfo />}/>
     <Route path='/create-post' exact element={<AddOrderCard />}/>
+    <Route path='/notifications' exact element={<Notifications />}/>
     </Routes>
   </Router>
 )

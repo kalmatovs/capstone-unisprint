@@ -12,7 +12,10 @@ const orderSchema = new Schema({
     datePosted: { type: Date, default: Date.now }, // Automatically sets to the current date
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     acceptedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null},
-    acceptedAt: {type: Date, default: null}
+    acceptedAt: {type: Date, default: null},
+    applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Track applicants
+    status: { type: String, default: "Open" }, // Open, Accepted, or Rejected
+    // userName: {type: String, default: userId.fullName}
 });
 
 module.exports = mongoose.model("Order", orderSchema);

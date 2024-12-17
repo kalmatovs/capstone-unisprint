@@ -17,9 +17,9 @@ const Navbar = ({onSearch, searchTerm}) => {
     <nav class=" border-gray-200 dark:bg-gray-900 dark:border-gray-700">
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src="https://files.oaiusercontent.com/file-xJ70nFRNMV9nQracst3YXzIh?se=2024-11-21T03%3A37%3A15Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D6ad644ac-8f77-4482-9721-293a7d92433e.webp&sig=yHcCRAhka1DxYkE7hy8vSoyk9X8r%2B5CRYOEImfiT1BM%3D" class="w-20 rounded-full" alt="Logo" />
-          <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">UniSprint</span>
-        </a>
+          <img src="../../src/assets/unisprint_logo.webp" alt="Logo" className='w-20 h-20 rounded-xl'/>
+          <Link to="/dashboard"><span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">UniSprint</span>
+        </Link></a>
         <div className="flex-1 max-w-md mx-4 text-black">
           <input
             type="text"
@@ -44,7 +44,10 @@ const Navbar = ({onSearch, searchTerm}) => {
               <Link to="/profile" class="block py-2 px-3 text-gray rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Profile </Link>
             </li>
             <li>
-              <a href="#" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">About UniSprint</a>
+              <Link to="/"><a href="#" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">About UniSprint</a></Link>
+            </li>
+            <li>
+              <Link to="/notifications"><a href="#" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Activity</a></Link>
             </li>
           </ul>
         </div>

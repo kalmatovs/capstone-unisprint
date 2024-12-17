@@ -95,10 +95,12 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/mycomponents/Navbar/Navbar';
 import OrderCard from '../../components/mycomponents/Cards/OrderCard';
 import Modal from "react-modal";
-import AddOrderCard from './AddOrderCard';
 import axiosInstance from '@/utils/axiosInstance';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-hot-toast";
+import axios from "axios";
+
 
 const Home = () => {
   const [orders, setOrders] = useState([]);
@@ -113,39 +115,55 @@ const Home = () => {
 
   const fetchPosts = async () => {
     try {
-      setLoading(true);
-      const response = await axiosInstance.get("/get-all-orders");
-      setOrders(response.data.orders);
+        setLoading(true);
+        const response = await axiosInstance.get("/get-all-orders");
+        setOrders(response.data.orders);
     } catch (error) {
-      console.error("Error fetching posts:", error);
+        console.error("Error fetching posts:", error);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
 
   const handleSearch = (value) => {
     setSearchTerm(value);
   };
 
-  const handleAcceptJob = async (orderId) => {
+  // const handleAcceptJob = async (orderId) => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     if (!token) {
+  //       alert("You must be logged in to accept a job.");
+  //       return;
+  //     }
+
+  //     const response = await axiosInstance.post("/accept-job", { orderId }, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+
+  //     if (response.data.success) {
+  //       alert("Job accepted successfully!");
+  //       setAcceptedJobs([...acceptedJobs, orderId]);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error accepting job:", error);
+  //     alert("Failed to accept job. Please try again.");
+  //   }
+  // };
+
+  const handleApply = async (orderId) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("You must be logged in to accept a job.");
-        return;
+      await axiosInstance.post(`/apply-job/${orderId}`, {}, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Adjust as needed
+        },
       }
-
-      const response = await axiosInstance.post("/accept-job", { orderId }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.data.success) {
-        alert("Job accepted successfully!");
-        setAcceptedJobs([...acceptedJobs, orderId]);
-      }
+    );
+      alert("Applied to job successfully!");
     } catch (error) {
-      console.error("Error accepting job:", error);
-      alert("Failed to accept job. Please try again.");
+      alert(error.response?.data?.message || "Error applying to job");
+      
     }
   };
 
@@ -184,15 +202,16 @@ const Home = () => {
                   price={order.payment}
                   urgency={order.urgency}
                   date={order.datePosted}
+                  name={order.userName}
                 />
-                {!acceptedJobs.includes(order._id) && (
+                {/* {!acceptedJobs.includes(order._id) && ( */}
                   <button
-                    onClick={() => handleAcceptJob(order._id)}
+                    onClick={() => handleApply(order._id)}
                     className="mt-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md"
                   >
                     Accept Job
                   </button>
-                )}
+                
               </div>
             ))
           )}
