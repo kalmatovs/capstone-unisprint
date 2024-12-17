@@ -13,13 +13,14 @@ import axios from 'axios';
 const ProfileInfo = () => {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [acceptedJobs, setAcceptedJobs] = useState([]);
+  // const [acceptedJobs, setAcceptedJobs] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const [isEditing, setIsEditing] = useState(false); // For showing the edit pop-up
   const [editData, setEditData] = useState({});
 
+  
   useEffect(() => {
     if (location.state && location.state.newPost) {
       setPosts(prevPosts => [location.state.newPost, ...prevPosts]);
@@ -46,18 +47,17 @@ const ProfileInfo = () => {
           axiosInstance.get("/profile", {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axiosInstance.get("/get-user-created-posts", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axiosInstance.get("/get-user-accepted-jobs", {
+          axiosInstance.get("/get-user-all-orders", {
             headers: { Authorization: `Bearer ${token}` },
           })
         ]);
 
-        setUser(profileResponse.data.user);
-        setPosts(postsResponse.data.createdPosts); // Updated to match the backend response
-        setAcceptedJobs(acceptedJobsResponse.data.acceptedJobs);
+        // setUser(profileResponse.data.user);
+        setPosts(postsResponse.data.orders); // Updated to match the backend response
         setIsLoading(false);
+        
+        console.log("Posts Response:", postsResponse.data);
+
       } catch (err) {
         console.error("Profile fetch error:", err);
         setError(err.response?.data?.message || err.message || "Error fetching profile");
@@ -137,6 +137,7 @@ const handleEditSubmit = async (e) => {
   e.preventDefault();
 
   try {
+
       const response = await axios.put(
           `http://localhost:8000/edit-order/${editData._id}`,
           editData,
@@ -166,7 +167,6 @@ const handleEditSubmit = async (e) => {
     <>
       <Navbar />
       <div className='flex flex-col items-center mt-10 space-y-6'>
-<<<<<<< HEAD
         <Card className="w-full max-w-md overflow-hidden transition-all hover:shadow-lg">
           <CardHeader className="border-b bg-muted/50 p-6">
             <div className="flex items-center space-x-4">
@@ -174,23 +174,10 @@ const handleEditSubmit = async (e) => {
                 <AvatarImage src={user.profilePicture || "#"} alt={user.name} />
                 <AvatarFallback>{user.fullName?.charAt(0) || 'K'}</AvatarFallback>
               </Avatar>
+              </div>
               <div>
                 <h2 className="text-black text-2xl font-bold">{user.fullName}</h2>
                 <Badge>{user.year}</Badge>
-=======
-        {user && (
-          <Card className="w-full max-w-md overflow-hidden transition-all hover:shadow-lg">
-            <CardHeader className="border-b bg-muted/50 p-6">
-              <div className="flex items-center space-x-4">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage src={user.profilePicture || "#"} alt={user.name} />
-                  <AvatarFallback>{user.name?.charAt(0) || 'U'}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <h2 className="text-black text-2xl font-bold">{user.fullName}</h2>
-                  <Badge>{user.year}</Badge>
-                </div>
->>>>>>> f562d3d73f147b6df45785f2e2d340f21013b271
               </div>
             </CardHeader>
             <CardContent className="grid gap-4 p-6">
@@ -210,7 +197,7 @@ const handleEditSubmit = async (e) => {
               </div>
             </CardContent>
           </Card>
-        )}
+        
 
           <h3 className="text-2xl font-bold mb-4">My Posts</h3>
         <div className="flex justify-center space-x-5">
@@ -247,25 +234,7 @@ const handleEditSubmit = async (e) => {
             ))
           )}
         </div>
-        <div className="w-full max-w-md">
-          <h3 className="text-2xl font-bold mb-4">My Accepted Jobs</h3>
-          {acceptedJobs.length === 0 ? (
-            <p>No accepted jobs yet.</p>
-          ) : (
-            acceptedJobs.map((job) => (
-              <OrderCard
-                key={job._id}
-                title={job.title}
-                date={job.datePosted}
-                content={job.content}
-                category={job.category}
-                location={job.location}
-                price={job.payment}
-                urgency={job.urgency}
-              />
-            ))
-          )}
-        </div>
+
       </div>
       {isEditing && (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">

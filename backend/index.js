@@ -130,14 +130,10 @@ app.get("/get-user", authenticateToken, async (req, res) => {
 });
 
 app.post("/add-order", authenticateToken, async(req, res) => {
-<<<<<<< HEAD
     console.log("Authenticated user:", req.user);
     console.log("JWT Secret:", process.env.ACCESS_TOKEN_SECRET);
     const jwt = require("jsonwebtoken");
     const userId = req.user.userId;
-=======
-    const jwt = require("jsonwebtoken")
->>>>>>> f562d3d73f147b6df45785f2e2d340f21013b271
 
     // Replace with your actual token   
 
