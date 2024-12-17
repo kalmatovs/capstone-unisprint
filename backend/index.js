@@ -16,12 +16,14 @@ mongoose.connect(config.connectionString, { useNewUrlParser: true, useUnifiedTop
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const port = process.env.PORT || 4000;
+
 
 
 const jwt = require("jsonwebtoken");
 const { authenticateToken } = require("./utilities");
 
-app.use(express.json());
+app.use(express.json())
 
 app.use(
     cors({
